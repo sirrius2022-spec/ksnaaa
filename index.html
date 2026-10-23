@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CampLog - 자연을 걷는 캠퍼의 일지</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Phosphor Icons CDN -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <!-- Google Fonts (Pretendard & Outfit) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Pretendard', 'Outfit', 'sans-serif'],
+          },
+          colors: {
+            forest: {
+              50: '#f2f7f4',
+              100: '#e1ede6',
+              600: '#2d6a4f',
+              700: '#1b4332',
+              800: '#081c15',
+              900: '#040d0a',
+            },
+            amberwood: '#b07d62',
+            earth: '#deb887',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #121814;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #2d6a4f;
+      border-radius: 4px;
+    }
+    /* Hero Gradient Overlay */
+    .hero-bg {
+      background: linear-gradient(to bottom, rgba(4, 13, 10, 0.45), rgba(4, 13, 10, 0.95)), 
+                  url('https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+    }
+    .gear-card:hover .gear-img {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body class="bg-[#0e1411] text-zinc-200 font-sans selection:bg-forest-600 selection:text-white">
+
+  <!-- ================= Navigation ================= -->
+  <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-[#0e1411]/85 backdrop-blur-md border-b border-white/5" id="navbar">
+    <div class="max-w-7xl mx-auto px-5 sm:px-8 h-20 flex items-center justify-between">
+      <a href="#" class="flex items-center gap-2 group">
+        <div class="w-10 h-10 rounded-xl bg-forest-600/30 border border-forest-600/50 flex items-center justify-center text-forest-100 group-hover:bg-forest-600 transition">
+          <i class="ph-bold ph-campfire text-2xl text-emerald-400 group-hover:text-white"></i>
+        </div>
+        <div class="leading-tight">
+          <span class="text-lg font-bold tracking-tight text-white block">WANDERLUST</span>
+          <span class="text-xs text-emerald-500 font-medium tracking-widest uppercase">Camp & Forest</span>
+        </div>
+      </a>
+
+      <!-- Desktop Menu -->
+      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-400">
+        <a href="#about" class="hover:text-emerald-400 transition">소개 (About)</a>
+        <a href="#journal" class="hover:text-emerald-400 transition">캠핑 기록 (Journal)</a>
+        <a href="#gears" class="hover:text-emerald-400 transition">장비 리스트 (Gears)</a>
+        <a href="#checklist" class="hover:text-emerald-400 transition">체크리스트 (Pack)</a>
+        <a href="#guestbook" class="hover:text-emerald-400 transition">방명록 (Contact)</a>
+      </nav>
+
+      <!-- Action Button -->
+      <div class="hidden md:flex items-center gap-3">
+        <button onclick="openModal('quickContactModal')" class="px-4 py-2 text-xs font-semibold rounded-lg bg-forest-600 text-white hover:bg-forest-700 transition shadow-lg shadow-forest-900/50 flex items-center gap-1.5">
+          <i class="ph ph-envelope-simple text-base"></i> 연락하기
+        </button>
+      </div>
+
+      <!-- Mobile Menu Toggle Button -->
+      <button id="mobileMenuBtn" class="md:hidden p-2 text-zinc-300 hover:text-white" aria-label="메뉴 열기">
+        <i class="ph ph-list text-2xl"></i>
+      </button>
+    </div>
+
+    <!-- Mobile Dropdown -->
+    <div id="mobileMenu" class="hidden md:hidden px-6 pt-3 pb-6 bg-[#0e1411] border-b border-white/10 space-y-3 text-sm">
+      <a href="#about" onclick="toggleMenu()" class="block py-2 text-zinc-300 hover:text-emerald-400">소개 (About)</a>
+      <a href="#journal" onclick="toggleMenu()" class="block py-2 text-zinc-300 hover:text-emerald-400">캠핑 기록 (Journal)</a>
+      <a href="#gears" onclick="toggleMenu()" class="block py-2 text-zinc-300 hover:text-emerald-400">장비 리스트 (Gears)</a>
+      <a href="#checklist" onclick="toggleMenu()" class="block py-2 text-zinc-300 hover:text-emerald-400">체크리스트 (Pack)</a>
+      <a href="#guestbook" onclick="toggleMenu()" class="block py-2 text-zinc-300 hover:text-emerald-400">방명록 (Contact)</a>
+    </div>
+  </header>
+
+  <!-- ================= Hero Section ================= -->
+  <section class="hero-bg min-h-screen flex items-center justify-center pt-24 pb-16 px-5 relative">
+    <div class="max-w-4xl mx-auto text-center space-y-6">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-forest-700/50 border border-emerald-500/30 text-emerald-300 text-xs font-medium backdrop-blur-sm animate-pulse">
+        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+        현재 43번째 숲속 여행 기록 중
+      </div>
+      
+      <h1 class="text-4xl sm:text-6xl md:text-7xl font-bold text-white tracking-tight leading-[1.15]">
+        도심을 벗어나 <br>
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-amber-200">모닥불 피어나는 숲으로</span>
+      </h1>
+
+      <p class="text-base sm:text-lg text-zinc-300 max-w-2xl mx-auto font-light leading-relaxed">
+        미니멀 오토캠핑과 백패킹을 즐기는 캠퍼 '민우'의 개인 아카이브입니다. 
+        산과 호수, 계곡에서 남긴 사진과 사용 장비, 그리고 잊지 못할 밤의 이야기를 공유합니다.
+      </p>
+
+      <div class="flex flex-wrap justify-center gap-4 pt-4">
+        <a href="#journal" class="px-6 py-3 rounded-xl bg-forest-600 hover:bg-forest-700 text-white font-medium text-sm transition shadow-lg shadow-forest-900/60 flex items-center gap-2">
+          <i class="ph-bold ph-book-open"></i> 최근 캠핑 로그 읽기
+        </a>
+        <a href="#checklist" class="px-6 py-3 rounded-xl bg-white/10 hover:bg-white/15 text-white font-medium text-sm backdrop-blur-md border border-white/10 transition flex items-center gap-2">
+          <i class="ph-bold ph-check-square-offset"></i> 짐싸기 체크리스트
+        </a>
+      </div>
+
+      <!-- Quick Highlights -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-12 max-w-3xl mx-auto border-t border-white/10">
+        <div class="p-3">
+          <div class="text-2xl sm:text-3xl font-bold text-white">43회+</div>
+          <div class="text-xs text-zinc-400 mt-1">누적 출정 횟수</div>
+        </div>
+        <div class="p-3">
+          <div class="text-2xl sm:text-3xl font-bold text-white">12개</div>
+          <div class="text-xs text-zinc-400 mt-1">보유 텐트 & 쉘터</div>
+        </div>
+        <div class="p-3">
+          <div class="text-2xl sm:text-3xl font-bold text-white">3년차</div>
+          <div class="text-xs text-zinc-400 mt-1">부시크래프트 & 솔캠</div>
+        </div>
+        <div class="p-3">
+          <div class="text-2xl sm:text-3xl font-bold text-white">강원·경기</div>
+          <div class="text-xs text-zinc-400 mt-1">선호 캠핑 스팟</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= About Me ================= -->
+  <section id="about" class="py-24 px-5 max-w-7xl mx-auto">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+      <div class="lg:col-span-5 relative">
+        <div class="relative mx-auto max-w-md rounded-2xl overflow-hidden shadow-2xl border border-white/10">
+          <img src="https://images.unsplash.com/photo-1526772662000-3f88f10405ff?auto=format&fit=crop&w=900&q=80" 
+               alt="캠퍼 프로필 사진" 
+               class="w-full h-[460px] object-cover"
+               onerror="this.src='https://placehold.co/600x800/1b4332/ffffff?text=Camper+Profile'">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-6">
+            <div>
+              <p class="text-emerald-400 text-xs font-semibold uppercase tracking-wider">Solo & Bushcraft Camper</p>
+              <h3 class="text-xl font-bold text-white mt-1">김민우 (Minwoo Kim)</h3>
+              <p class="text-xs text-zinc-300 mt-0.5">자연이 주는 고요함에서 일상의 쉼표를 찾습니다.</p>
+            </div>
+          </div>
+        </div>
+        <!-- Decorative Badge -->
+        <div class="absolute -bottom-4 -right-2 sm:right-6 bg-forest-700/90 border border-emerald-500/40 p-4 rounded-xl backdrop-blur-md shadow-xl text-center">
+          <i class="ph ph-fire text-amber-400 text-2xl"></i>
+          <p class="text-xs font-semibold text-white mt-1">Leave No Trace</p>
+          <p class="text-[10px] text-zinc-300">자연을 사랑하는 흔적 없는 캠핑</p>
+        </div>
+      </div>
+
+      <div class="lg:col-span-7 space-y-6">
+        <div class="inline-block px-3 py-1 bg-emerald-950/70 border border-emerald-600/30 rounded-lg text-emerald-400 text-xs font-medium">
+          ABOUT CAMPER
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-bold text-white tracking-tight">
+          비우러 떠났다가, <br>
+          <span class="text-emerald-400">새로운 영감</span>으로 가득 차서 돌아옵니다.
+        </h2>
+        <p class="text-zinc-300 leading-relaxed text-sm sm:text-base">
+          안녕하세요! 주말이면 배낭 하나, 텐트 하나 챙겨 숲과 강가로 떠나는 3년 차 캠퍼 민우입니다. 
+          화려한 오토캠핑보다는 불필요한 짐을 덜어내는 미니멀 캠핑, 빗소리와 바람 소리에 집중할 수 있는 노지 차박 및 백패킹을 지향합니다.
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+          <div class="p-4 rounded-xl bg-white/[0.03] border border-white/5 space-y-2">
+            <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+              <i class="ph ph-tent text-lg"></i>
+            </div>
+            <h4 class="text-sm font-semibold text-white">캠핑 스타일</h4>
+            <p class="text-xs text-zinc-400 leading-relaxed">경량 백패킹, 솔로 부시크래프트, 우중 캠핑 및 커피 드립 캠핑</p>
+          </div>
+          <div class="p-4 rounded-xl bg-white/[0.03] border border-white/5 space-y-2">
+            <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center">
+              <i class="ph ph-coffee text-lg"></i>
+            </div>
+            <h4 class="text-sm font-semibold text-white">필수 캠핑 루틴</h4>
+            <p class="text-xs text-zinc-400 leading-relaxed">아침 숲속 핸드드립 커피, 밤 하늘 별 보기, 장작불 타임랩스 기록</p>
+          </div>
+        </div>
+
+        <div class="pt-4 flex flex-wrap gap-2 text-xs text-zinc-400">
+          <span class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10">#백패킹</span>
+          <span class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10">#솔로캠핑</span>
+          <span class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10">#미니멀기어</span>
+          <span class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10">#헬리녹스</span>
+          <span class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10">#스노우피크</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Camping Journal (Cards with Filter) ================= -->
+  <section id="journal" class="py-24 px-5 bg-zinc-950/60 border-t border-b border-white/5">
+    <div class="max-w-7xl mx-auto space-y-12">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div>
+          <span class="text-xs font-semibold text-emerald-400 tracking-wider uppercase">Field Notes</span>
+          <h2 class="text-3xl sm:text-4xl font-bold text-white mt-1">캠핑 일지 & 여행기</h2>
+          <p class="text-sm text-zinc-400 mt-2">머물렀던 명소들과 그날의 날씨, 모닥불 앞에서의 단상들</p>
+        </div>
+
+        <!-- Filter buttons -->
+        <div class="flex flex-wrap gap-2 bg-[#121915] p-1.5 rounded-xl border border-white/10 text-xs" id="journalFilter">
+          <button onclick="filterJournal('all')" class="journal-btn active px-3.5 py-1.5 rounded-lg bg-forest-600 text-white font-medium transition">전체</button>
+          <button onclick="filterJournal('backpacking')" class="journal-btn px-3.5 py-1.5 rounded-lg text-zinc-400 hover:text-white transition">백패킹</button>
+          <button onclick="filterJournal('autocamp')" class="journal-btn px-3.5 py-1.5 rounded-lg text-zinc-400 hover:text-white transition">오토캠핑</button>
+          <button onclick="filterJournal('rain')" class="journal-btn px-3.5 py-1.5 rounded-lg text-zinc-400 hover:text-white transition">우중캠핑</button>
+        </div>
+      </div>
+
+      <!-- Journal Cards Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="journalGrid">
+        <!-- Item 1 -->
+        <article class="journal-item autocamp bg-[#141b17] border border-white/10 rounded-2xl overflow-hidden group hover:border-emerald-500/50 transition flex flex-col">
+          <div class="relative overflow-hidden h-52">
+            <img src="https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=800&q=80" 
+                 alt="강원도 인제 캠핑" 
+                 class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                 onerror="this.src='https://placehold.co/600x400/1e2923/ffffff?text=Inje+Camp'">
+            <span class="absolute top-4 left-4 text-[11px] font-semibold px-2.5 py-1 rounded-md bg-forest-800/80 backdrop-blur-md text-emerald-300 border border-emerald-500/20">
+              오토캠핑
+            </span>
+            <span class="absolute bottom-3 right-4 text-xs text-white/80 flex items-center gap-1 bg-black/60 px-2 py-0.5 rounded">
+              <i class="ph ph-map-pin"></i> 강원 인제 자작나무숲
+            </span>
+          </div>
+          <div class="p-6 flex-1 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center gap-3 text-xs text-zinc-400 mb-2">
+                <span><i class="ph ph-calendar"></i> 2026.09.12</span>
+                <span>•</span>
+                <span><i class="ph ph-cloud-sun"></i> 맑음 (14°C)</span>
+              </div>
+              <h3 class="text-lg font-bold text-white group-hover:text-emerald-300 transition">하얀 자작나무 아래서 맞이한 가을밤</h3>
+              <p class="text-xs text-zinc-300 mt-2.5 line-clamp-2 leading-relaxed">
+                스산해지는 가을바람과 함께 타오르는 참나무 장작불. 이번에는 타프 없이 쉘터 모드로 밤하늘의 쏟아지는 별을 관찰했습니다.
+              </p>
+            </div>
+            <div class="pt-5 mt-4 border-t border-white/5 flex items-center justify-between text-xs">
+              <span class="text-emerald-400 font-medium">사용 텐트: 노르디스크 아스가르드</span>
+              <button onclick="readStory('인제 자작나무숲', '하얀 자작나무 아래서 맞이한 가을밤', '2026.09.12', '가을바람이 숲을 채울 때, 장작 타는 소리와 함께 따뜻한 뱅쇼 한 잔을 끓여 마셨습니다. 밤 11시 이후 소등 시간이 되자 도심에서는 볼 수 없었던 은하수가 뚜렷하게 보였습니다.')" class="text-zinc-400 hover:text-white flex items-center gap-1">
+                상세보기 <i class="ph ph-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Item 2 -->
+        <article class="journal-item backpacking bg-[#141b17] border border-white/10 rounded-2xl overflow-hidden group hover:border-emerald-500/50 transition flex flex-col">
+          <div class="relative overflow-hidden h-52">
+            <img src="https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?auto=format&fit=crop&w=800&q=80" 
+                 alt="굴업도 백패킹" 
+                 class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                 onerror="this.src='https://placehold.co/600x400/1e2923/ffffff?text=Gulupdo'">
+            <span class="absolute top-4 left-4 text-[11px] font-semibold px-2.5 py-1 rounded-md bg-amber-900/80 backdrop-blur-md text-amber-200 border border-amber-500/20">
+              백패킹
+            </span>
+            <span class="absolute bottom-3 right-4 text-xs text-white/80 flex items-center gap-1 bg-black/60 px-2 py-0.5 rounded">
+              <i class="ph ph-map-pin"></i> 굴업도 개머리언덕
+            </span>
+          </div>
+          <div class="p-6 flex-1 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center gap-3 text-xs text-zinc-400 mb-2">
+                <span><i class="ph ph-calendar"></i> 2026.08.05</span>
+                <span>•</span>
+                <span><i class="ph ph-wind"></i> 해풍 강함 (21°C)</span>
+              </div>
+              <h3 class="text-lg font-bold text-white group-hover:text-emerald-300 transition">서해의 갈라파고스, 개머리언덕 비박</h3>
+              <p class="text-xs text-zinc-300 mt-2.5 line-clamp-2 leading-relaxed">
+                배를 타고 들어간 섬. 14kg 배낭의 무게가 전혀 아깝지 않았던 노을과 들사슴 떼와의 조우. 바람에 버텨준 알파인 텐트에 감사한 밤.
+              </p>
+            </div>
+            <div class="pt-5 mt-4 border-t border-white/5 flex items-center justify-between text-xs">
+              <span class="text-emerald-400 font-medium">배낭 무게: 13.8kg BPL</span>
+              <button onclick="readStory('굴업도 개머리언덕', '서해의 갈라파고스 비박', '2026.08.05', '사방이 탁 트인 초원 언덕에서 맞이한 일몰은 잊을 수가 없습니다. 강한 해풍 속에서 펙다운을 꼼꼼히 한 덕분에 안전하게 밤을 보낼 수 있었습니다.')" class="text-zinc-400 hover:text-white flex items-center gap-1">
+                상세보기 <i class="ph ph-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Item 3 -->
+        <article class="journal-item rain bg-[#141b17] border border-white/10 rounded-2xl overflow-hidden group hover:border-emerald-500/50 transition flex flex-col">
+          <div class="relative overflow-hidden h-52">
+            <img src="https://images.unsplash.com/photo-1517824806704-9040b037703b?auto=format&fit=crop&w=800&q=80" 
+                 alt="포천 우중 캠핑" 
+                 class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                 onerror="this.src='https://placehold.co/600x400/1e2923/ffffff?text=Rain+Camp'">
+            <span class="absolute top-4 left-4 text-[11px] font-semibold px-2.5 py-1 rounded-md bg-blue-900/80 backdrop-blur-md text-blue-200 border border-blue-500/20">
+              우중캠핑
+            </span>
+            <span class="absolute bottom-3 right-4 text-xs text-white/80 flex items-center gap-1 bg-black/60 px-2 py-0.5 rounded">
+              <i class="ph ph-map-pin"></i> 경기 포천 백운계곡
+            </span>
+          </div>
+          <div class="p-6 flex-1 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center gap-3 text-xs text-zinc-400 mb-2">
+                <span><i class="ph ph-calendar"></i> 2026.07.18</span>
+                <span>•</span>
+                <span><i class="ph ph-drop"></i> 소나기 (19°C)</span>
+              </div>
+              <h3 class="text-lg font-bold text-white group-hover:text-emerald-300 transition">타프 위로 쏟아지는 빗소리와 진한 커피</h3>
+              <p class="text-xs text-zinc-300 mt-2.5 line-clamp-2 leading-relaxed">
+                비 오는 날의 캠핑은 또 다른 아늑함을 줍니다. 물방울 튀는 소리를 들으며 책 한 권과 따뜻한 스튜로 완성한 힐링 주말.
+              </p>
+            </div>
+            <div class="pt-5 mt-4 border-t border-white/5 flex items-center justify-between text-xs">
+              <span class="text-emerald-400 font-medium">사용 타프: 옥타 실타프</span>
+              <button onclick="readStory('포천 백운계곡', '타프 위로 쏟아지는 빗소리', '2026.07.18', '우중 캠핑의 매력은 철수의 번거로움을 잊게 만듭니다. 텐트 스킨에 닿는 규칙적인 빗소리는 그 어떤 음악보다 뛰어난 휴식을 안겨주었습니다.')" class="text-zinc-400 hover:text-white flex items-center gap-1">
+                상세보기 <i class="ph ph-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Gear Showcase ================= -->
+  <section id="gears" class="py-24 px-5 max-w-7xl mx-auto">
+    <div class="space-y-12">
+      <div class="text-center max-w-2xl mx-auto space-y-3">
+        <span class="text-xs font-semibold text-emerald-400 tracking-wider uppercase">My Camp Arsenal</span>
+        <h2 class="text-3xl sm:text-4xl font-bold text-white">애용하는 캠핑 기어 셋업</h2>
+        <p class="text-sm text-zinc-400">수많은 바꿈질 끝에 살아남은 실전용 정예 장비 컬렉션입니다.</p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Gear 1 -->
+        <div class="gear-card bg-[#141c17] rounded-2xl p-4 border border-white/10 hover:border-emerald-500/40 transition flex flex-col">
+          <div class="h-44 rounded-xl overflow-hidden bg-zinc-900/60 mb-4">
+            <img src="https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?auto=format&fit=crop&w=600&q=80" 
+                 alt="텐트" 
+                 class="gear-img w-full h-full object-cover transition duration-300"
+                 onerror="this.src='https://placehold.co/400x300/18251e/ffffff?text=Tent'">
+          </div>
+          <div class="text-[11px] text-emerald-400 font-semibold tracking-wider uppercase mb-1">Shelter / Tent</div>
+          <h4 class="text-base font-bold text-white">힐레베르그 아틀라스</h4>
+          <p class="text-xs text-zinc-400 mt-1 flex-1">극동계와 악천후에도 끄떡없는 궁극의 돔형 쉘터. 내부 확장성과 쾌적한 전고를 자랑합니다.</p>
+          <div class="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-xs text-zinc-400">
+            <span>만족도: ★★★★★</span>
+            <span class="text-zinc-300 font-mono">10.5kg</span>
+          </div>
+        </div>
+
+        <!-- Gear 2 -->
+        <div class="gear-card bg-[#141c17] rounded-2xl p-4 border border-white/10 hover:border-emerald-500/40 transition flex flex-col">
+          <div class="h-44 rounded-xl overflow-hidden bg-zinc-900/60 mb-4">
+            <img src="https://images.unsplash.com/photo-1547949003-9792a18a2601?auto=format&fit=crop&w=600&q=80" 
+                 alt="배낭" 
+                 class="gear-img w-full h-full object-cover transition duration-300"
+                 onerror="this.src='https://placehold.co/400x300/18251e/ffffff?text=Backpack'">
+          </div>
+          <div class="text-[11px] text-emerald-400 font-semibold tracking-wider uppercase mb-1">Backpack</div>
+          <h4 class="text-base font-bold text-white">하이퍼라이트 마운틴기어 3400</h4>
+          <p class="text-xs text-zinc-400 mt-1 flex-1">다이니마(Dyneema) 방수 패브릭 적용. 극한의 방수성과 가벼움으로 BPL 백패킹 최애 가방.</p>
+          <div class="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-xs text-zinc-400">
+            <span>만족도: ★★★★☆</span>
+            <span class="text-zinc-300 font-mono">910g</span>
+          </div>
+        </div>
+
+        <!-- Gear 3 -->
+        <div class="gear-card bg-[#141c17] rounded-2xl p-4 border border-white/10 hover:border-emerald-500/40 transition flex flex-col">
+          <div class="h-44 rounded-xl overflow-hidden bg-zinc-900/60 mb-4">
+            <img src="https://images.unsplash.com/photo-1533873984035-25970ab07461?auto=format&fit=crop&w=600&q=80" 
+                 alt="체어" 
+                 class="gear-img w-full h-full object-cover transition duration-300"
+                 onerror="this.src='https://placehold.co/400x300/18251e/ffffff?text=Chair'">
+          </div>
+          <div class="text-[11px] text-emerald-400 font-semibold tracking-wider uppercase mb-1">Furniture</div>
+          <h4 class="text-base font-bold text-white">헬리녹스 체어원 블랙</h4>
+          <p class="text-xs text-zinc-400 mt-1 flex-1">수납의 혁신. 캠핑 의자의 표준이자 가벼우면서도 견고한 착좌감을 주는 동반자.</p>
+          <div class="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-xs text-zinc-400">
+            <span>만족도: ★★★★★</span>
+            <span class="text-zinc-300 font-mono">890g</span>
+          </div>
+        </div>
+
+        <!-- Gear 4 -->
+        <div class="gear-card bg-[#141c17] rounded-2xl p-4 border border-white/10 hover:border-emerald-500/40 transition flex flex-col">
+          <div class="h-44 rounded-xl overflow-hidden bg-zinc-900/60 mb-4">
+            <img src="https://images.unsplash.com/photo-1520690214124-2405c5217036?auto=format&fit=crop&w=600&q=80" 
+                 alt="스토브 랜턴" 
+                 class="gear-img w-full h-full object-cover transition duration-300"
+                 onerror="this.src='https://placehold.co/400x300/18251e/ffffff?text=Burner'">
+          </div>
+          <div class="text-[11px] text-emerald-400 font-semibold tracking-wider uppercase mb-1">Cook & Light</div>
+          <h4 class="text-base font-bold text-white">스노우피크 기가파워 & 녹턴</h4>
+          <p class="text-xs text-zinc-400 mt-1 flex-1">화력과 감성을 동시에 채워주는 가스 랜턴과 초경량 티타늄 버너 조합.</p>
+          <div class="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-xs text-zinc-400">
+            <span>만족도: ★★★★★</span>
+            <span class="text-zinc-300 font-mono">102g</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Interactive Packing Checklist ================= -->
+  <section id="checklist" class="py-24 px-5 bg-zinc-950/70 border-t border-white/5">
+    <div class="max-w-4xl mx-auto">
+      <div class="text-center space-y-3 mb-10">
+        <span class="text-xs font-semibold text-emerald-400 tracking-wider uppercase">Interactive Packing Tool</span>
+        <h2 class="text-3xl font-bold text-white">캠핑 출정 패킹 체크리스트</h2>
+        <p class="text-sm text-zinc-400">빠뜨린 물건이 없도록 클릭하여 준비 상태를 점검해보세요.</p>
+      </div>
+
+      <div class="bg-[#121915] border border-white/10 rounded-2xl p-6 sm:p-8 shadow-xl">
+        <!-- Progress Bar -->
+        <div class="mb-6">
+          <div class="flex justify-between items-center text-xs mb-2">
+            <span class="text-zinc-300 font-semibold">패킹 진행률</span>
+            <span id="packPercent" class="text-emerald-400 font-bold">0% (0/8 완료)</span>
+          </div>
+          <div class="w-full h-2.5 bg-zinc-800 rounded-full overflow-hidden">
+            <div id="progressBar" class="h-full bg-emerald-500 rounded-full transition-all duration-300" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <!-- Checklist Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="checklistContainer">
+          <!-- Item 1 -->
+          <label class="flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.03] border border-white/5 cursor-pointer hover:bg-white/[0.06] transition group">
+            <input type="checkbox" onchange="updateChecklist()" class="pack-checkbox w-4 h-4 rounded text-forest-600 focus:ring-forest-600 bg-zinc-900 border-zinc-700">
+            <div class="flex-1">
+              <span class="text-sm text-zinc-200 group-hover:text-white transition">텐트 본체, 폴대, 펙(팩), 스트링</span>
+              <span class="block text-[11px] text-zinc-500">잠자리 기본 쉘터 구성품</span>
+            </div>
+            <i class="ph ph-tent text-zinc-500"></i>
+          </label>
+          <!-- Item 2 -->
+          <label class="flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.03] border border-white/5 cursor-pointer hover:bg-white/[0.06] transition group">
+            <input type="checkbox" onchange="updateChecklist()" class="pack-checkbox w-4 h-4 rounded text-forest-600 focus:ring-forest-600 bg-zinc-900 border-zinc-700">
+            <div class="flex-1">
+              <span class="text-sm text-zinc-200 group-hover:text-white transition">에어매트 & 동계 구스다운 침낭</span>
+              <span class="block text-[11px] text-zinc-500">야간 체온 유지 R-Value 점검</span>
+            </div>
+            <i class="ph ph-bed text-zinc-500"></i>
+          </label>
+          <!-- Item 3 -->
+          <label class="flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.03] border border-white/5 cursor-pointer hover:bg-white/[0.06] transition group">
+            <input type="checkbox" onchange="updateChecklist()" class="pack-checkbox w-4 h-4 rounded text-forest-600 focus:ring-forest-600 bg-zinc-900 border-zinc-700">
+            <div class="flex-1">
+              <span class="text-sm text-zinc-200 group-hover:text-white transition">버너, 이소가스, 코펠(쿠커)</span>
+              <span class="block text-[11px] text-zinc-500">취사용 조리도구 및 라이터</span>
+            </div>
+            <i class="ph ph-cooking-pot text-zinc-500"></i>
+          </label>
+          <!-- Item 4 -->
+          <label class="flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.03] border border-white/5 cursor-pointer hover:bg-white/[0.06] transition group">
+            <input type="checkbox" onchange="updateChecklist()" class="pack-checkbox w-4 h-4 rounded text-forest-600 focus:ring-forest-600 bg-zinc-900 border-zinc-700">
+            <div class="flex-1">
+              <span class="text-sm text-zinc-200 group-hover:text-white transition">헤드랜턴 및 충전식 조명</span>
+              <span class="block text-[11px] text-zinc-500">예비 배터리 및 케이블 완충 확인</span>
+            </div>
+            <i class="ph ph-flashlight text-zinc-500"></i>
+          </label>
+          <!-- Item 5 -->
+          <label class="flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.03] border border-white/5 cursor-pointer hover:bg-white/[0.06] transition group">
+            <input type="checkbox" onchange="updateChecklist()" class="pack-checkbox w-4 h-4 rounded text-forest-600 focus:ring-forest-600 bg-zinc-900 border-zinc-700">
+            <div class="flex-1">
+              <span class="text-sm text-zinc-200 group-hover:text-white transition">접이식 체어 & 경량 테이블</span>
+              <span class="block text-[11px] text-zinc-500">체어원 및 헬리녹스 테이블</span>
+            </div>
+            <i class="ph ph-armchair text-zinc-500"></i>
+          </label>
+          <!-- Item 6 -->
+          <label class="flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.03] border border-white/5 cursor-pointer hover:bg-white/[0.06] transition group">
+            <input type="checkbox" onchange="updateChecklist()" class="pack-checkbox w-4 h-4 rounded text-forest-600 focus:ring-forest-600 bg-zinc-900 border-zinc-700">
+            <div class="flex-1">
+              <span class="text-sm text-zinc-200 group-hover:text-white transition">방풍 방수 자켓 & 보온 모자</span>
+              <span class="block text-[11px] text-zinc-500">기온차 대비 레이어드 의류</span>
+            </div>
+            <i class="ph ph-t-shirt text-zinc-500"></i>
+          </label>
+          <!-- Item 7 -->
+          <label class="flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.03] border border-white/5 cursor-pointer hover:bg-white/[0.06] transition group">
+            <input type="checkbox" onchange="updateChecklist()" class="pack-checkbox w-4 h-4 rounded text-forest-600 focus:ring-forest-600 bg-zinc-900 border-zinc-700">
+            <div class="flex-1">
+              <span class="text-sm text-zinc-200 group-hover:text-white transition">구급약 파우치 & 벌레 기피제</span>
+              <span class="block text-[11px] text-zinc-500">소독약, 밴드, 소화제, 진통제</span>
+            </div>
+            <i class="ph ph-first-aid text-zinc-500"></i>
+          </label>
+          <!-- Item 8 -->
+          <label class="flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.03] border border-white/5 cursor-pointer hover:bg-white/[0.06] transition group">
+            <input type="checkbox" onchange="updateChecklist()" class="pack-checkbox w-4 h-4 rounded text-forest-600 focus:ring-forest-600 bg-zinc-900 border-zinc-700">
+            <div class="flex-1">
+              <span class="text-sm text-zinc-200 group-hover:text-white transition">종량제 쓰레기봉투 (LNT)</span>
+              <span class="block text-[11px] text-zinc-500">모든 쓰레기는 되가져오기</span>
+            </div>
+            <i class="ph ph-trash text-zinc-500"></i>
+          </label>
+        </div>
+
+        <div class="mt-6 flex flex-wrap justify-between items-center pt-4 border-t border-white/5 gap-3">
+          <button onclick="resetChecklist()" class="text-xs text-zinc-400 hover:text-white flex items-center gap-1.5 transition">
+            <i class="ph ph-arrow-counter-clockwise"></i> 초기화
+          </button>
+          <button onclick="allChecklist()" class="text-xs text-emerald-400 hover:text-emerald-300 font-medium transition">
+            모두 체크하기
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Guestbook & Contact Section ================= -->
+  <section id="guestbook" class="py-24 px-5 max-w-7xl mx-auto">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+      <!-- Contact Info -->
+      <div class="lg:col-span-5 space-y-6">
+        <span class="text-xs font-semibold text-emerald-400 tracking-wider uppercase">Get in Touch</span>
+        <h2 class="text-3xl font-bold text-white">함께 캠핑 갈 동행이나 <br>장비 질문을 남겨주세요</h2>
+        <p class="text-zinc-400 text-sm leading-relaxed">
+          캠핑 명소 추천, 기어 호환성 문의, 동반 백패킹 제안 등 언제나 열려있습니다. 메시지를 남겨주시면 확인 후 메일로 답장드립니다.
+        </p>
+
+        <div class="space-y-4 pt-4 text-sm">
+          <div class="flex items-center gap-3 text-zinc-300">
+            <div class="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center text-emerald-400">
+              <i class="ph ph-envelope-simple text-lg"></i>
+            </div>
+            <span>minwoo.camper@wanderlust.io</span>
+          </div>
+          <div class="flex items-center gap-3 text-zinc-300">
+            <div class="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center text-emerald-400">
+              <i class="ph ph-instagram-logo text-lg"></i>
+            </div>
+            <span>@minwoo_camp_log</span>
+          </div>
+          <div class="flex items-center gap-3 text-zinc-300">
+            <div class="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center text-emerald-400">
+              <i class="ph ph-map-pin-line text-lg"></i>
+            </div>
+            <span>대한민국 서울 & 전국 산과 들</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Guestbook Form & List -->
+      <div class="lg:col-span-7 bg-[#131b17] border border-white/10 rounded-2xl p-6 sm:p-8 space-y-6">
+        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+          <i class="ph-bold ph-chats-circle text-emerald-400"></i> 방문자 한마디 남기기
+        </h3>
+
+        <!-- Form -->
+        <form id="commentForm" onsubmit="handleCommentSubmit(event)" class="space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-medium text-zinc-400 mb-1">닉네임</label>
+              <input type="text" id="guestName" required placeholder="예: 초보캠퍼" 
+                     class="w-full bg-[#0a0f0d] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 transition">
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-zinc-400 mb-1">한줄 태그</label>
+              <input type="text" id="guestTag" placeholder="예: #감성캠퍼 #오토캠핑" 
+                     class="w-full bg-[#0a0f0d] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 transition">
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-zinc-400 mb-1">메시지</label>
+            <textarea id="guestMsg" required rows="3" placeholder="남기고 싶은 인사말이나 질문을 적어주세요 :)" 
+                      class="w-full bg-[#0a0f0d] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 transition"></textarea>
+          </div>
+          <button type="submit" class="px-5 py-2.5 bg-forest-600 hover:bg-forest-700 text-white rounded-xl text-xs font-semibold transition flex items-center gap-1.5 shadow-md">
+            <i class="ph ph-paper-plane-tilt text-base"></i> 방명록 등록
+          </button>
+        </form>
+
+        <!-- Message Box Container -->
+        <div class="pt-4 border-t border-white/5 space-y-3">
+          <span class="text-xs font-semibold text-zinc-400 uppercase tracking-wider">최근 메시지</span>
+          <div id="guestbookList" class="space-y-3 max-h-64 overflow-y-auto pr-1">
+            <!-- Sample Comment 1 -->
+            <div class="p-3.5 rounded-xl bg-white/[0.02] border border-white/5 space-y-1">
+              <div class="flex items-center justify-between text-xs">
+                <span class="font-bold text-emerald-300">솔캠러Jin <span class="text-[10px] text-zinc-500 ml-1">#솔로캠핑</span></span>
+                <span class="text-[10px] text-zinc-500">방금 전</span>
+              </div>
+              <p class="text-xs text-zinc-300">인제 자작나무숲 쉘터 세팅 너무 멋지네요! 다음 백패킹 목적지로 참고하겠습니다.</p>
+            </div>
+            <!-- Sample Comment 2 -->
+            <div class="p-3.5 rounded-xl bg-white/[0.02] border border-white/5 space-y-1">
+              <div class="flex items-center justify-between text-xs">
+                <span class="font-bold text-emerald-300">밤하늘별빛 <span class="text-[10px] text-zinc-500 ml-1">#동계캠핑</span></span>
+                <span class="text-[10px] text-zinc-500">3시간 전</span>
+              </div>
+              <p class="text-xs text-zinc-300">HMG 가방 프레임 편안한가요? 저도 지를까 고민 중이었는데 후기 도움 되었습니다!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Footer ================= -->
+  <footer class="border-t border-white/10 bg-[#080d0a] py-12 px-5 text-zinc-500 text-xs">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-2">
+        <i class="ph-bold ph-campfire text-emerald-500 text-xl"></i>
+        <span class="font-bold text-zinc-300 tracking-wider">CAMP JOURNAL & ARCHIVE</span>
+      </div>
+      <p>© 2026 Minwoo Kim. All rights reserved. Nature, Fire & Silence.</p>
+      <div class="flex items-center gap-4 text-base text-zinc-400">
+        <a href="#" class="hover:text-emerald-400 transition" aria-label="Github"><i class="ph ph-github-logo"></i></a>
+        <a href="#" class="hover:text-emerald-400 transition" aria-label="Instagram"><i class="ph ph-instagram-logo"></i></a>
+        <a href="#" class="hover:text-emerald-400 transition" aria-label="Youtube"><i class="ph ph-youtube-logo"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= Story Detail Modal ================= -->
+  <div id="storyModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-[#121915] border border-white/15 max-w-lg w-full rounded-2xl p-6 sm:p-8 space-y-5 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-white/10 pb-4">
+        <div>
+          <span id="modalDate" class="text-[11px] text-emerald-400 font-mono"></span>
+          <h3 id="modalTitle" class="text-lg font-bold text-white mt-0.5"></h3>
+          <span id="modalLocation" class="text-xs text-zinc-400 flex items-center gap-1 mt-1"></span>
+        </div>
+        <button onclick="closeModal('storyModal')" class="p-2 text-zinc-400 hover:text-white rounded-lg hover:bg-white/5 transition" aria-label="닫기">
+          <i class="ph ph-x text-xl"></i>
+        </button>
+      </div>
+      <div class="space-y-4">
+        <p id="modalBody" class="text-sm text-zinc-300 leading-relaxed"></p>
+        <div class="p-3.5 rounded-xl bg-forest-950/60 border border-emerald-500/20 text-xs text-emerald-300 flex items-center gap-2">
+          <i class="ph ph-tree-evergreen text-lg"></i>
+          <span>LNT(Leave No Trace) 수칙을 지키며 다녀온 캠핑입니다.</span>
+        </div>
+      </div>
+      <div class="pt-2 text-right">
+        <button onclick="closeModal('storyModal')" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-xs text-white transition">
+          닫기
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= Quick Contact Modal ================= -->
+  <div id="quickContactModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-[#121915] border border-white/15 max-w-md w-full rounded-2xl p-6 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <h3 class="text-base font-bold text-white flex items-center gap-2">
+          <i class="ph ph-paper-plane-tilt text-emerald-400"></i> 이메일 보내기
+        </h3>
+        <button onclick="closeModal('quickContactModal')" class="text-zinc-400 hover:text-white" aria-label="닫기">
+          <i class="ph ph-x text-lg"></i>
+        </button>
+      </div>
+      <div class="space-y-3">
+        <p class="text-xs text-zinc-300 leading-relaxed">
+          저와 함께 캠핑을 가거나 장비 협업을 원하신다면 아래 메일 주소로 편하게 연락주세요!
+        </p>
+        <div class="p-3 bg-zinc-900 rounded-xl border border-white/5 flex items-center justify-between">
+          <span class="text-xs font-mono text-emerald-300" id="copyEmail">minwoo.camper@wanderlust.io</span>
+          <button onclick="copyToClipboard('copyEmail')" class="text-xs bg-forest-600 hover:bg-forest-700 text-white px-2.5 py-1 rounded-md transition flex items-center gap-1">
+            <i class="ph ph-copy"></i> 복사
+          </button>
+        </div>
+        <div id="copyAlert" class="hidden text-[11px] text-emerald-400 text-center font-medium">
+          이메일 주소가 클립보드에 복사되었습니다!
+        </div>
+      </div>
+      <div class="pt-2 text-right">
+        <button onclick="closeModal('quickContactModal')" class="px-4 py-2 bg-white/10 hover:bg-white/15 text-xs text-white rounded-xl transition">
+          확인
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= Interactive Scripts ================= -->
+  <script>
+    // Mobile navigation toggle
+    const mobileBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    mobileBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    function toggleMenu() {
+      mobileMenu.classList.add('hidden');
+    }
+
+    // Modal Control
+    function openModal(id) {
+      document.getElementById(id).classList.remove('hidden');
+    }
+    function closeModal(id) {
+      document.getElementById(id).classList.add('hidden');
+    }
+
+    // Story detail view
+    function readStory(location, title, date, body) {
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalLocation').innerHTML = `<i class="ph ph-map-pin"></i> ${location}`;
+      document.getElementById('modalDate').textContent = date;
+      document.getElementById('modalBody').textContent = body;
+      openModal('storyModal');
+    }
+
+    // Journal Filter
+    function filterJournal(category) {
+      const items = document.querySelectorAll('.journal-item');
+      const buttons = document.querySelectorAll('#journalFilter .journal-btn');
+
+      buttons.forEach(btn => {
+        btn.classList.remove('bg-forest-600', 'text-white');
+        btn.classList.add('text-zinc-400');
+      });
+
+      event.target.classList.add('bg-forest-600', 'text-white');
+      event.target.classList.remove('text-zinc-400');
+
+      items.forEach(item => {
+        if (category === 'all') {
+          item.style.display = 'flex';
+        } else {
+          if (item.classList.contains(category)) {
+            item.style.display = 'flex';
+          } else {
+            item.style.display = 'none';
+          }
+        }
+      });
+    }
+
+    // Checklist Logic
+    function updateChecklist() {
+      const checkboxes = document.querySelectorAll('.pack-checkbox');
+      const checked = document.querySelectorAll('.pack-checkbox:checked');
+      const total = checkboxes.length;
+      const count = checked.length;
+      const percent = Math.round((count / total) * 100);
+
+      document.getElementById('progressBar').style.width = percent + '%';
+      document.getElementById('packPercent').textContent = `${percent}% (${count}/${total} 완료)`;
+    }
+
+    function resetChecklist() {
+      const checkboxes = document.querySelectorAll('.pack-checkbox');
+      checkboxes.forEach(cb => cb.checked = false);
+      updateChecklist();
+    }
+
+    function allChecklist() {
+      const checkboxes = document.querySelectorAll('.pack-checkbox');
+      checkboxes.forEach(cb => cb.checked = true);
+      updateChecklist();
+    }
+
+    // Live Guestbook Comment Add
+    function handleCommentSubmit(e) {
+      e.preventDefault();
+      const nameInput = document.getElementById('guestName');
+      const tagInput = document.getElementById('guestTag');
+      const msgInput = document.getElementById('guestMsg');
+
+      const name = nameInput.value.trim();
+      const tag = tagInput.value.trim() ? tagInput.value.trim() : '#캠퍼';
+      const msg = msgInput.value.trim();
+
+      if (!name || !msg) return;
+
+      const guestbookList = document.getElementById('guestbookList');
+      const commentDiv = document.createElement('div');
+      commentDiv.className = 'p-3.5 rounded-xl bg-forest-950/40 border border-emerald-500/20 space-y-1 animate-fadeIn';
+      commentDiv.innerHTML = `
+        <div class="flex items-center justify-between text-xs">
+          <span class="font-bold text-emerald-300">${escapeHtml(name)} <span class="text-[10px] text-zinc-500 ml-1">${escapeHtml(tag)}</span></span>
+          <span class="text-[10px] text-emerald-400">방금 전</span>
+        </div>
+        <p class="text-xs text-zinc-200">${escapeHtml(msg)}</p>
+      `;
+
+      guestbookList.insertBefore(commentDiv, guestbookList.firstChild);
+
+      // Reset form
+      nameInput.value = '';
+      tagInput.value = '';
+      msgInput.value = '';
+    }
+
+    // Escape HTML helper
+    function escapeHtml(text) {
+      const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      };
+      return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+    }
+
+    // Copy to clipboard fallback
+    function copyToClipboard(elementId) {
+      const text = document.getElementById(elementId).innerText;
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        const alertBox = document.getElementById('copyAlert');
+        alertBox.classList.remove('hidden');
+        setTimeout(() => alertBox.classList.add('hidden'), 2500);
+      } catch (err) {
+        console.error('클립보드 복사 실패:', err);
+      }
+      document.body.removeChild(textArea);
+    }
+  </script>
+</body>
+</html>
